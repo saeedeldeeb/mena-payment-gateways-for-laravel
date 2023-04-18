@@ -1,12 +1,12 @@
 {
-    "name": "saeedeldeeb/mena-payment-gateways-for-laravel",
-    "description": "Package for payment gateway providers that operates in the Middle East and North Africa (MENA) region.",
+    "name": ":vendor_slug/:package_slug",
+    "description": ":package_description",
     "keywords": [
         ":vendor_name",
         "laravel",
         ":package_slug"
     ],
-    "homepage": "https://github.com/saeedeldeeb/mena-payment-gateways-for-laravel",
+    "homepage": "https://github.com/:vendor_slug/:package_slug",
     "license": "MIT",
     "authors": [
         {
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Saeedeldeeb\\PaymentGateway\\": "src/",
-            "Saeedeldeeb\\PaymentGateway\\Database\\Factories\\": "database/factories/"
+            "VendorName\\Skeleton\\": "src/",
+            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Saeedeldeeb\\PaymentGateway\\Tests\\": "tests/"
+            "VendorName\\Skeleton\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -61,10 +61,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Saeedeldeeb\\PaymentGateway\\PaymentServiceProvider"
+                "VendorName\\Skeleton\\SkeletonServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "Saeedeldeeb\\PaymentGateway\\Facades\\PaymentGateway"
+                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
             }
         }
     },
