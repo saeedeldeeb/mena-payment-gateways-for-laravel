@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Saeedeldeeb\PaymentGateway;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
+use Saeedeldeeb\PaymentGateway\Commands\PaymentGatewayCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class PaymentGatewayServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,10 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('mena-payment-gateways-for-laravel')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_skeleton_table')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasMigration('create_mena-payment-gateways-for-laravel_table')
+            ->hasCommand(PaymentGatewayCommand::class);
     }
 }
