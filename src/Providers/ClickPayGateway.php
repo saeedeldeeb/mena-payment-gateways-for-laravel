@@ -48,7 +48,7 @@ class ClickPayGateway implements PaymentGatewayInterface
         return View::make('clickpay.form')->with(compact('data'));
     }
 
-    public function getPaymentResult(array $gatewayResponse = null)
+    public function getPaymentResult($gatewayResponse = null)
     {
         return $gatewayResponse;
     }
