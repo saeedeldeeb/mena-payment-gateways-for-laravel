@@ -2,51 +2,54 @@
 
 namespace Saeedeldeeb\PaymentGateway\Providers;
 
+use Illuminate\View\View;
+use Saeedeldeeb\PaymentGateway\Contracts\PayableOrder;
 use Saeedeldeeb\PaymentGateway\Providers\ClickPayService\ClickPayClient;
 use Exception;
-use Illuminate\Support\Facades\DB;
-use Saeedeldeeb\PaymentGateway\Contracts\PaymentGateway;
-use Saeedeldeeb\PaymentGateway\PaymentTransaction;
+use Saeedeldeeb\PaymentGateway\Contracts\PaymentGateway as PaymentGatewayInterface;
 
-class ClickPayGateway implements PaymentGateway
+class ClickPayGateway implements PaymentGatewayInterface
 {
+    const CLICK_PAY_DEFAULT_TRANSACTION_TYPE = 'sale';
+    const CLICK_PAY_DEFAULT_TRANSACTION_CLASS = 'ecom';
+    const CLICK_PAY_DEFAULT_TRANSACTION_Description = 'Donation';
+    const CLICK_PAY_SUCCESS_STATUS = 'A';
+
+    protected PayableOrder $order;
+
     /**
+     * Set the payable order.
+     *
+     * @param PayableOrder $order
+     *
+     * @return PaymentGatewayInterface
+     */
+    public function setOrder(PayableOrder $order)
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    /**
+     * Get the payment form.
+     *
+     * @return string
      * @throws Exception
      */
-    public function frameData(PaymentTransaction $paymentTransaction): array
+    public function getPaymentForm()
     {
         $clickPayObj = new ClickPayClient();
         $data = [
-            'cart_id' => $paymentTransaction->uuid,
-            'mount' => $paymentTransaction->amount,
-            'transaction' => $paymentTransaction,
+            'cart_id' => $this->order->getPaymentOrderId(),
+            'mount' => $this->order->getPaymentAmount(),
+            'transaction' => $this->order->getCustomerExtras(),
         ];
         $data['url'] = $clickPayObj->getTransactionsUrl($data);
-        return $data;
+        return View::make('clickpay.form')->with(compact('data'));
     }
 
-    public function response(array $responseData)
+    public function getPaymentResult(array $gatewayResponse = null)
     {
-        try {
-            $transaction = PaymentTransaction::query()
-                ->find($responseData['cart_id']);
-            $paymentStatusCode = $responseData['payment_result']['response_status'];
-            if (isset($transaction) && $transaction->status == self::PAYMENT_PENDING) {
-                DB::beginTransaction();
-                $transaction = tap($transaction)
-                    ->update(
-                        [
-                            'status' =>
-                                $paymentStatusCode == PaymentEnums::CLICK_PAY_SUCCESS_STATUS ?
-                                    self::PAYMENT_RESULT_COMPLETED : self::PAYMENT_RESULT_FAILED,
-                        ]
-                    );
-                DB::commit();
-                return $transaction->refresh();
-            }
-        } catch (Exception $e) {
-            DB::rollBack();
-        }
-        return null;
+        return $gatewayResponse;
     }
 }

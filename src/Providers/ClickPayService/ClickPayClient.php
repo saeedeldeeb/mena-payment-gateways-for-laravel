@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Saeedeldeeb\PaymentGateway\Providers\ClickPayService;
 
+use Saeedeldeeb\PaymentGateway\PaymentTransaction;
 use Saeedeldeeb\PaymentGateway\Providers\BaseService;
 use Exception;
+use Saeedeldeeb\PaymentGateway\Providers\ClickPayGateway;
+use Throwable;
 
 class ClickPayClient extends BaseService
 {
@@ -28,16 +31,13 @@ class ClickPayClient extends BaseService
      */
     protected array $attributes = [];
 
-    /**
-     * @return $this
-     */
     public function __construct()
     {
         parent::__construct();
         $this->attributes['profile_id'] = config('payment.clickPay.profile_id');
         $this->attributes['cart_currency'] = config('payment.default_currency');
-        $this->attributes['tran_type'] = PaymentEnums::CLICK_PAY_DEFAULT_TRANSACTION_TYPE;
-        $this->attributes['tran_class'] = PaymentEnums::CLICK_PAY_DEFAULT_TRANSACTION_CLASS;
+        $this->attributes['tran_type'] = ClickPayGateway::CLICK_PAY_DEFAULT_TRANSACTION_TYPE;
+        $this->attributes['tran_class'] = ClickPayGateway::CLICK_PAY_DEFAULT_TRANSACTION_CLASS;
         $this->attributes['customer_details'] = [
 //            'name' => 'test',
 //            'email' => 'example' . randString(3) . '@example.com',
@@ -73,8 +73,8 @@ class ClickPayClient extends BaseService
      */
     public function setCartDescription(PaymentTransaction $paymentTransaction): static
     {
-        $this->attributes['cart_description'] = $paymentTransaction?->donation?->initiative?->title ??
-            PaymentEnums::CLICK_PAY_DEFAULT_TRANSACTION_Description;
+        $this->attributes['cart_description'] = $paymentTransaction->donation?->initiative?->title ??
+            ClickPayGateway::CLICK_PAY_DEFAULT_TRANSACTION_Description;
         return $this;
     }
 
@@ -107,13 +107,7 @@ class ClickPayClient extends BaseService
             ->setCartDescription($data['transaction'])
             ->setRedirectionUrl();
         $response = $this->makeRequest();
-        if (!empty($response['redirect_url'])) {
-            // update transaction id by click pay transaction id
-            $transaction = PaymentTransaction::query()->where('uuid', $data['cart_id'])->first();
-            $transaction->update(['transaction_id', $response['tran_ref']]);
-            return $response['redirect_url'];
-        }
-        throw new Exception($response['message']);
+        return $response['redirect_url'];
     }
 
     /**
@@ -135,7 +129,7 @@ class ClickPayClient extends BaseService
                 $options
             );
             return json_decode((string)$response->getBody(), true);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new Exception($e->getMessage());
         }
     }

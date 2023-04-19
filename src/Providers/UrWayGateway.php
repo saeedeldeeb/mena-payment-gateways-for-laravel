@@ -2,39 +2,51 @@
 
 namespace Saeedeldeeb\PaymentGateway\Providers;
 
+use Illuminate\View\View;
+use Saeedeldeeb\PaymentGateway\Contracts\PayableOrder;
 use Saeedeldeeb\PaymentGateway\Providers\UrWayService\UrWayClient;
 use Exception;
-use Saeedeldeeb\PaymentGateway\Contracts\PaymentGateway;
-use Saeedeldeeb\PaymentGateway\PaymentTransaction;
+use Saeedeldeeb\PaymentGateway\Contracts\PaymentGateway as PaymentGatewayInterface;
 
-class UrWayGateway implements PaymentGateway
+class UrWayGateway implements PaymentGatewayInterface
 {
+    protected PayableOrder $order;
+
     /**
-     * @param PaymentTransaction $paymentTransaction
-     * @return array
-     * @throws Exception
+     * Set the payable order.
+     *
+     * @param PayableOrder $order
+     *
+     * @return PaymentGatewayInterface
      */
-    public function frameData(PaymentTransaction $paymentTransaction): array
+    public function setOrder(PayableOrder $order)
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    public function getPaymentForm()
     {
         $data = [
-            'sender_name' => 'Afaq',
-            'merchant_reference' => $paymentTransaction->merchant_reference,
-            'amount' => $paymentTransaction->amount,
+            'sender_name' => config('payment.sender_name'),
+            'merchant_reference' => $this->order->getPaymentOrderId(),
+            'amount' => $this->order->getPaymentAmount(),
             'currency' => config('payment.urway.currency'),
-            'merchant_extra' => $paymentTransaction->uuid,
-            'customer_email' => config('app.support_email'),
-            'language' => app()->getLocale(),
+            'merchant_extra' => $this->order->getCustomerExtras(),
+            'customer_email' => $this->order->getCustomerEmail(),
+            'language' => $this->order->getCustomerLanguage(),
             'customer_ip' => request()->ip(),
             'track_id' => rand()          // track_id is the transaction id in our side
         ];
         $returnData = $this->paymentRequest($data);
 
-        $paymentTransaction->transaction_id = $returnData->payid ?? null;
-        $paymentTransaction->track_id = $data['track_id'];
-        $paymentTransaction->save();
-
         $data['url'] = $returnData->getPaymentUrl();
-        return $data;
+        return View::make('urway.form')->with(compact('data'));
+    }
+
+    public function getPaymentResult($gatewayResponse = null)
+    {
+        return $this->checkResponseStatus($gatewayResponse);
     }
 
     /**
@@ -57,26 +69,6 @@ class UrWayGateway implements PaymentGateway
             ->setCustomerIp($data['customer_ip']);
 
         return $request->pay();
-    }
-
-    /**
-     * @param array $responseData
-     * @return mixed
-     * @throws Exception
-     */
-    public function response(array $responseData)
-    {
-        $response = $this->checkResponseStatus($responseData);
-
-        $transaction = tap(
-            PaymentTransaction::query()
-                ->where('merchant_reference', $response->udf1)->first()
-        )
-            ->update([
-                'status' => $response->responseCode == 000 ?
-                    self::PAYMENT_RESULT_COMPLETED : self::PAYMENT_RESULT_FAILED
-            ]);
-        return $transaction->refresh();
     }
 
     /**

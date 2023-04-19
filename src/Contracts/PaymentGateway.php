@@ -2,8 +2,6 @@
 
 namespace Saeedeldeeb\PaymentGateway\Contracts;
 
-use Saeedeldeeb\PaymentGateway\PaymentTransaction;
-
 interface PaymentGateway
 {
     const PAYMENT_RESULT_COMPLETED = 'completed';
@@ -12,7 +10,29 @@ interface PaymentGateway
     const PAYMENT_RESULT_FAILED = 'failed';
     const PAYMENT_PENDING = 'pending';
 
-    public function frameData(PaymentTransaction $paymentTransaction): array;
+    /**
+     * Set the order to be paid.
+     *
+     * @param PayableOrder $order
+     *
+     * @return PaymentGateway
+     */
+    public function setOrder(PayableOrder $order);
 
-    public function response(array $responseData);
+    /**
+     * Get the payment form.
+     *
+     * @return string
+     */
+    public function getPaymentForm();
+
+    /**
+     * Determine the result of the payment
+     * If gatewayResponse is null, Input::all() will be used.
+     *
+     * @param null $gatewayResponse
+     *
+     * @return string
+     */
+    public function getPaymentResult($gatewayResponse = null);
 }
