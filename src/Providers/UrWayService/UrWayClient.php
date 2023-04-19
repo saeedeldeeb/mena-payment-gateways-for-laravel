@@ -257,9 +257,4 @@ class UrWayClient extends BaseService
             ) . '|' . $this->attributes['amount'] . '|' . $this->attributes['currency'];
         $this->attributes['requestHash'] = hash('sha256', $requestHash);
     }
-
-    public function dd()
-    {
-        dd($this->attributes);
-    }
 }
