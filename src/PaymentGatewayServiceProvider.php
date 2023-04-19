@@ -18,7 +18,6 @@ class PaymentGatewayServiceProvider extends PackageServiceProvider implements De
             ->name('mena-payment-gateways-for-laravel')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_mena-payment-gateways-for-laravel_table')
             ->hasCommand(PaymentGatewayCommand::class);
     }
 
