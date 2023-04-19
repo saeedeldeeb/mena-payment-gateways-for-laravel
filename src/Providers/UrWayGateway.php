@@ -72,7 +72,10 @@ class UrWayGateway implements PaymentGateway
             PaymentTransaction::query()
                 ->where('merchant_reference', $response->udf1)->first()
         )
-            ->update(['status' => $response->responseCode == 000 ? 'Completed' : 'Failed']);
+            ->update([
+                'status' => $response->responseCode == 000 ?
+                    self::PAYMENT_RESULT_COMPLETED : self::PAYMENT_RESULT_FAILED
+            ]);
         return $transaction->refresh();
     }
 

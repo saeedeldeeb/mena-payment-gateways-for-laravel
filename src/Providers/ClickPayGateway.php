@@ -31,14 +31,14 @@ class ClickPayGateway implements PaymentGateway
             $transaction = PaymentTransaction::query()
                 ->find($responseData['cart_id']);
             $paymentStatusCode = $responseData['payment_result']['response_status'];
-            if (isset($transaction) && $transaction->status == PaymentEnums::PENDING) {
+            if (isset($transaction) && $transaction->status == self::PAYMENT_PENDING) {
                 DB::beginTransaction();
                 $transaction = tap($transaction)
                     ->update(
                         [
                             'status' =>
                                 $paymentStatusCode == PaymentEnums::CLICK_PAY_SUCCESS_STATUS ?
-                                    PaymentEnums::COMPLETED : PaymentEnums::FAILED,
+                                    self::PAYMENT_RESULT_COMPLETED : self::PAYMENT_RESULT_FAILED,
                         ]
                     );
                 DB::commit();
