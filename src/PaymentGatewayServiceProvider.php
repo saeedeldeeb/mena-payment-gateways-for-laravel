@@ -2,7 +2,10 @@
 
 namespace Saeedeldeeb\PaymentGateway;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Saeedeldeeb\PaymentGateway\Providers\ClickPayGateway;
+use Saeedeldeeb\PaymentGateway\Providers\UrWayGateway;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Saeedeldeeb\PaymentGateway\Commands\PaymentGatewayCommand;

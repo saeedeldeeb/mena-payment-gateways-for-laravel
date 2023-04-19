@@ -3,12 +3,13 @@
 namespace Saeedeldeeb\PaymentGateway;
 
 use Exception;
+use Saeedeldeeb\PaymentGateway\Contracts\PaymentGateway as PaymentGatewayInterface;
 
 class PaymentGatewayRegistry
 {
     protected array $gateways = [];
 
-    public function register($name, PaymentGateway $instance)
+    public function register($name, PaymentGatewayInterface $instance)
     {
         $this->gateways[$name] = $instance;
         return $this;
