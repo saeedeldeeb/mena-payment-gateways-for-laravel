@@ -8,13 +8,6 @@ use Saeedeldeeb\PaymentGateway\Contracts\PaymentGateway as PaymentGatewayInterfa
 class PaymentGateway
 {
     /**
-     * The application instance.
-     *
-     * @var Application
-     */
-    protected $app;
-
-    /**
      * The resolved gateway
      * @var PaymentGatewayInterface
      */
@@ -22,8 +15,8 @@ class PaymentGateway
 
     public function gateway(string|null $name = null)
     {
-        $name = $name ?: $this->getDefaultDriver();
-        return $this->gateway = $this->app[PaymentGatewayRegistry::class]
+        $name = $name ?: $this->getDefaultGateway();
+        return $this->gateway = app(PaymentGatewayRegistry::class)
             ->get($name);
     }
 
@@ -32,9 +25,9 @@ class PaymentGateway
      *
      * @return string
      */
-    public function getDefaultDriver(): string
+    public function getDefaultGateway(): string
     {
-        return $this->app['config']['mena-payment-gateways-for-laravel.default'];
+        return app()['config']['mena-payment-gateways-for-laravel.default'];
     }
 
     /**
