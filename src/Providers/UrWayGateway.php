@@ -25,6 +25,12 @@ class UrWayGateway implements PaymentGatewayInterface
         return $this;
     }
 
+    /**
+     * Get the payment form.
+     *
+     * @return string
+     * @throws Exception
+     */
     public function getPaymentForm()
     {
         $data = [
@@ -44,6 +50,9 @@ class UrWayGateway implements PaymentGatewayInterface
         return View::make('urway.form')->with(compact('data'));
     }
 
+    /**
+     * @throws Exception
+     */
     public function getPaymentResult($gatewayResponse = null)
     {
         return $this->checkResponseStatus($gatewayResponse);

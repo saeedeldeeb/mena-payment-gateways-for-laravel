@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'gateway' => env('DEFAULT_GATEWAY', 'clickpay'),
+    'default' => env('DEFAULT_GATEWAY', 'clickpay'),
 
     /*
     |--------------------------------------------------------------------------
