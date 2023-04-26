@@ -12,7 +12,7 @@ class UrWayClient extends BaseService
     /**
      * @var string
      */
-    protected $endpoint = 'URWAYPGService/transaction/jsonProcess/JSONrequest';
+    protected $endpoint = '/URWAYPGService/transaction/jsonProcess/JSONrequest';
 
     /**
      * Request method.

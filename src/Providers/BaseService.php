@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Saeedeldeeb\PaymentGateway\Providers;
 
 use GuzzleHttp\Client;
+use Saeedeldeeb\PaymentGateway\Providers\ClickPayService\ClickPayClient;
 use Saeedeldeeb\PaymentGateway\Providers\UrWayService\UrWayClient;
 
 abstract class BaseService
@@ -12,7 +13,7 @@ abstract class BaseService
     /**
      * Store guzzle client instance.
      *
-     * @var UrWayClient
+     * @var UrWayClient|ClickPayClient
      */
     protected $guzzleClient;
 
@@ -48,12 +49,13 @@ abstract class BaseService
      */
     public function getEndPointPath()
     {
-        return $this->getBasePath() . 'BaseService.php/' . $this->endpoint;
+        return $this->getBasePath() . $this->endpoint;
     }
 
 
     protected function getBasePath()
     {
-        return $this->basePath = config('payment.clickPay.base_bath');
+        $defaultGate = config('mena-payment-gateways-for-laravel.default');
+        return $this->basePath = config("mena-payment-gateways-for-laravel.$defaultGate.base_path");
     }
 }

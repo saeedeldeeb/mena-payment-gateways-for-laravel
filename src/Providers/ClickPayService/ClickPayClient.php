@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Saeedeldeeb\PaymentGateway\Providers\ClickPayService;
 
-use Saeedeldeeb\PaymentGateway\PaymentTransaction;
 use Saeedeldeeb\PaymentGateway\Providers\BaseService;
 use Exception;
 use Saeedeldeeb\PaymentGateway\Providers\ClickPayGateway;
@@ -71,7 +70,7 @@ class ClickPayClient extends BaseService
     /**
      * @return $this
      */
-    public function setCartDescription(PaymentTransaction $paymentTransaction): static
+    public function setCartDescription($paymentTransaction): static
     {
         $this->attributes['cart_description'] = $paymentTransaction->donation?->initiative?->title ??
             ClickPayGateway::CLICK_PAY_DEFAULT_TRANSACTION_Description;

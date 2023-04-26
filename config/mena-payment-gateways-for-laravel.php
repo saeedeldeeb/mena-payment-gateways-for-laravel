@@ -28,16 +28,15 @@ return [
     |
     */
     'urway' => [
+        'base_path' => env('URWAY_BASE'),
         'auth' => [
             'terminal_id' => env('URWAY_TERMINAL_ID'),
             'password' => env('URWAY_PASSWORD'),
             'merchant_key' => env('URWAY_MERCHANT_KEY'),
-            'base_bath' => env('URWAY_BASE')
         ],
-        'currency' => env('URWAY_CURRENCY')
     ],
     'clickpay' => [
-        'base_bath' => env('CLICK_PAY_BASE_URL'),
+        'base_path' => env('CLICK_PAY_BASE_URL'),
         'server_key' => env('CLICK_PAY_SERVER_KEY'),
         'profile_id' => env('CLICK_PAY_PROFILE_ID'),
     ],

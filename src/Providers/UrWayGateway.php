@@ -2,7 +2,7 @@
 
 namespace Saeedeldeeb\PaymentGateway\Providers;
 
-use Illuminate\View\View;
+use Illuminate\Support\Facades\View;
 use Saeedeldeeb\PaymentGateway\Contracts\PayableOrder;
 use Saeedeldeeb\PaymentGateway\Providers\UrWayService\UrWayClient;
 use Exception;
@@ -47,7 +47,7 @@ class UrWayGateway implements PaymentGatewayInterface
         $returnData = $this->paymentRequest($data);
 
         $data['url'] = $returnData->getPaymentUrl();
-        return View::make('urway.form')->with(compact('data'));
+        return View::make('mena-payment-gateways-for-laravel::urway.form')->with(compact('data'));
     }
 
     /**
