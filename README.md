@@ -41,9 +41,43 @@ return [
 ## Usage
 
 ```php
-$paymentGateway = new Saeedeldeeb\PaymentGateway();
+$paymentGateway = new  \Saeedeldeeb\PaymentGateway\Facades\PaymentGateway();
+$paymentGateway->gateway()->setOrder($order)->getPaymentForm();
 ```
+The ```$order``` you pass to the payment gateway must adhere to the ```PayableOrder```-interface:
 
+```php
+
+interface PayableOrder {
+
+    /**
+     * @return string
+     */
+    public function getPaymentOrderId();
+
+    /**
+     * @return double
+     */
+    public function getPaymentAmount();
+
+    /**
+     * @return string
+     */
+    public function getPaymentDescription();
+
+    /**
+     * @return string
+     */
+    public function getCustomerEmail();
+
+    /**
+     * @return string
+     */
+    public function getCustomerLanguage();
+
+
+} 
+```
 ## Testing
 
 ```bash
