@@ -13,6 +13,7 @@ class PaymentGatewayTest extends TestCase
      */
     public function test_facade_can_get_default_gateway()
     {
+        config()->set('mena-payment-gateways-for-laravel.default', 'urway');
         $urway = PaymentGateway::gateway();
         $this->assertInstanceOf(UrWayGateway::class, $urway);
     }

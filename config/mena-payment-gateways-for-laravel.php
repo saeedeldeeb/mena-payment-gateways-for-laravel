@@ -36,7 +36,7 @@ return [
         ],
         'currency' => env('URWAY_CURRENCY')
     ],
-    'clickPay' => [
+    'clickpay' => [
         'base_bath' => env('CLICK_PAY_BASE_URL'),
         'server_key' => env('CLICK_PAY_SERVER_KEY'),
         'profile_id' => env('CLICK_PAY_PROFILE_ID'),
