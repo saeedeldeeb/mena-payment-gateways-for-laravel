@@ -25,6 +25,16 @@ This is the contents of the published config file:
 
 ```php
 return [
+'default' => env('DEFAULT_GATEWAY', 'urway'),
+'urway' => [
+        'auth' => [
+            'terminal_id' => env('URWAY_TERMINAL_ID'),
+            'password' => env('URWAY_PASSWORD'),
+            .....
+                ]
+            ]
+    ......,
+    'default_currency' => env('DEFAULT_CURRENCY', "SAR")
 ];
 ```
 
