@@ -25,7 +25,7 @@ class PaymentGateway
      *
      * @return string
      */
-    public function getDefaultGateway(): string
+    protected function getDefaultGateway(): string
     {
         return app()['config']['mena-payment-gateways-for-laravel.default'];
     }
