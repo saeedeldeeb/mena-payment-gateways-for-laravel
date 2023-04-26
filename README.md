@@ -28,17 +28,10 @@ return [
 ];
 ```
 
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="mena-payment-gateways-for-laravel-views"
-```
-
 ## Usage
 
 ```php
 $paymentGateway = new Saeedeldeeb\PaymentGateway();
-echo $paymentGateway->echoPhrase('Hello, Saeedeldeeb!');
 ```
 
 ## Testing
